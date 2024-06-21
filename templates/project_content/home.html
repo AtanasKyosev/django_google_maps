@@ -19,6 +19,7 @@
                         <th>Id</th>
                         <th>Name</th>
                         <th>Adress</th>
+                        <th>Number</th>
                         <th>Zipcode</th>
                         <th>City</th>
                         <th>Country</th>
@@ -33,10 +34,11 @@
                         <td> {{a.id}} </td>
                         <td> {{a.name}} </td>
                         <td> {{a.adress}} </td>
+                        <td> {{a.number}} </td>
                         <td> {{a.zipcode}} </td>
                         <td> {{a.city}} </td>
                         <td> {{a.country}} </td>
-{#                        <td> <a href="{% url 'my_geocoding_view' a.id %}"> Geocode!</a> </td>#}
+                        <td> <a href="{% url 'my_geocoding_view' a.id %}"> Geocode!</a> </td>
                        
                     </tr>
 

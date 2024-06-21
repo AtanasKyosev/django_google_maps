@@ -90,13 +90,13 @@ form{
     width:100%;
 }
 
-/*.titleholder{*/
-/*    display: 'flex';*/
-/*    justify-content:'space-between';*/
-/*    background-color: #4267B2;*/
-/*    align-items: center;*/
-/*    height: 40px;*/
-/*}*/
+.titleholder{
+    display: flex;
+    justify-content: space-between;
+    background-color: #4267B2;
+    align-items: center;
+    height: 40px;
+}
 
 .linkholder{
     box-shadow: 0 0 20px rgba(0, 0, 0, .15);
@@ -106,7 +106,7 @@ form{
 
 
 .title{
-    color: white;
+    color: black;
     margin-left: 10px;
     font-weight: bold;
     font-size: 15px;
