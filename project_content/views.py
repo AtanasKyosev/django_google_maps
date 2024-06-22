@@ -1,11 +1,14 @@
+from datetime import datetime
+
 from django.views import View
 from django.views.generic import ListView
 
 import googlemaps
 from django.conf import settings
 
-from project_content.models import Locations
-from django.shortcuts import render
+from project_content.forms import DistanceForm
+from project_content.models import Locations, Distances
+from django.shortcuts import render, redirect
 
 
 class HomeView(ListView):
@@ -66,3 +69,81 @@ class GeocodingView(View):
         }
 
         return render(request, self.template_name, context)
+
+
+class DistanceView(View):
+    template_name = "project_content/distance.html"
+
+    def get(self, request):
+        form = DistanceForm
+        distances = Distances.objects.all()
+        context = {
+            'form': form,
+            'distances': distances
+        }
+
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        form = DistanceForm(request.POST)
+        if form.is_valid():
+            from_location = form.cleaned_data['from_location']
+
+            from_location_info = Locations.objects.get(name=from_location)
+
+            from_adress_string = ("ul. " + str(from_location.adress) + " " +
+                                  str(from_location.number) + ", " +
+                                  str(from_location_info.zipcode) + ", " +
+                                  str(from_location_info.city) + ", " +
+                                  str(from_location_info.country)
+                                  )
+
+            to_location = form.cleaned_data['to_location']
+
+            to_location_info = Locations.objects.get(name=to_location)
+
+            to_adress_string = ("ul. " + str(to_location.adress) + " " +
+                                str(to_location.number) + ", " +
+                                str(to_location_info.zipcode) + ", " +
+                                str(to_location_info.city) + ", " +
+                                str(to_location_info.country)
+                                )
+
+            mode = form.cleaned_data['mode']
+            now = datetime.now()
+
+            gmaps = googlemaps.Client(key=settings.GOOGLE_API_KEY)
+            calculate = gmaps.distance_matrix(
+                from_adress_string,
+                to_adress_string,
+                mode=mode,
+                departure_time=now
+            )
+
+            duration_seconds = calculate['rows'][0]['elements'][0]['duration']['value']
+            duration_minutes = duration_seconds / 60
+
+            distance_meters = calculate['rows'][0]['elements'][0]['distance']['value']
+            distance_kilometers = distance_meters / 1000
+
+            if 'duration_in_traffic' in calculate['rows'][0]['elements'][0]:
+                duration_in_traffic_seconds = calculate['rows'][0]['elements'][0]['duration_in_traffic']['value']
+                duration_in_traffic_minutes = duration_in_traffic_seconds / 60
+            else:
+                duration_in_traffic_minutes = None
+
+            obj = Distances(
+                from_location=Locations.objects.get(name=from_location),
+                to_location=Locations.objects.get(name=to_location),
+                mode=mode,
+                distance_km=distance_kilometers,
+                duration_mins=duration_minutes,
+                duration_traffic_mins=duration_in_traffic_minutes
+            )
+
+            obj.save()
+
+        else:
+            print(form.errors)
+
+        return redirect('my_distance_view')
