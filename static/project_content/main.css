@@ -1,5 +1,5 @@
 .mapholder{
-    height: 500px;
+    height: 600px;
     width: 100%;
 }
 
@@ -101,7 +101,6 @@ form{
 .linkholder{
     box-shadow: 0 0 20px rgba(0, 0, 0, .15);
     flex-direction: column;
-
 }
 
 
