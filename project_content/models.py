@@ -9,7 +9,7 @@ class Locations(models.Model):
     adress = models.CharField(max_length=200,blank=True, null=True)
     number = models.PositiveIntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    edited_at = models.DateTimeField(auto_now=True)
+    edited_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     lat = models.CharField(max_length=200, blank=True, null=True)
     lng = models.CharField(max_length=200, blank=True, null=True)
@@ -26,8 +26,8 @@ class Distances (models.Model):
     distance_km = models.DecimalField(max_digits=10, decimal_places=2)
     duration_mins = models.DecimalField(max_digits=10, decimal_places=2)
     duration_traffic_mins = models.DecimalField(max_digits=10, decimal_places=2,blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
-    edited_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    edited_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     def __str__(self):
         return self.id
